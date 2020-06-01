@@ -28,6 +28,13 @@ Route::resource('admin/users', 'AdminUsersController');
 
 
 
+Route::group(['middleware' => ['admin']], function () {
+
+    
+
+    
+});
+
 
 
 Route::get("admin", function(){

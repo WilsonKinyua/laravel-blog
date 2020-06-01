@@ -24,7 +24,7 @@
         @foreach ($users as $user)
         <tr>
             <td>{{$user->id}}</td>
-            <td><img height="50" src="{{$user->photo ? $user->photo->file : "No photo"}}" alt="No photo"></td>
+            <td><img height="100px" width="200px" src="{{$user->photo ? $user->photo->file : "http://placehold.it/100x100"}}" alt="" class="img-rounded"></td>
             <td><a href="{{('/admin/users/'. $user->id . '/edit')}}">{{$user->name}}</a></td>
             <td>{{$user->role ? $user->role->name : 'User has no role'}}</td>
             <td>{{$user->is_active == 1 ? 'Active' : 'Not Active' }}</td>
