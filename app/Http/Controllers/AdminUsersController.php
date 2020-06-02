@@ -7,6 +7,7 @@ use App\Http\Requests\UserEditRequest;
 use App\Photo;
 use App\Role;
 use App\User;
+use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 
 class AdminUsersController extends Controller
@@ -77,7 +78,7 @@ class AdminUsersController extends Controller
 
 
         }
-         return redirect("/admin/users");
+         return redirect("/admin/users")->with('success','User Created successfully');
     }
 
     /**
@@ -150,7 +151,7 @@ class AdminUsersController extends Controller
 
         $user->update($input);
 
-        return redirect("admin/users");
+        return redirect("admin/users")->with('success','User Has been Updated successfully');
 
 
     }
@@ -164,5 +165,12 @@ class AdminUsersController extends Controller
     public function destroy($id)
     {
         //
+
+       $user = User::findOrFail($id);
+
+       unlink(public_path() . $user->photo->file);
+       $user->delete();
+
+       return redirect("/admin/users")->with('warning','User Deleted successfully');
     }
 }
