@@ -15,6 +15,7 @@
   
 
             <link href="{{asset('css/libs.css')}}" rel="stylesheet">
+            @yield("styles")
             {{-- <link href="{{asset('css/app.css')}}" rel="stylesheet"> --}}
         {{-- <link href="{{asset('css/libs/blog-post.css')}}" rel="stylesheet">
         <link href="{{asset('css/libs/font-awesome.css')}}" rel="stylesheet">
@@ -168,12 +169,12 @@
                         <a href="#"><i class="fa fa-wrench fa-fw"></i>Categories<span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li>
-                                <a href="/categories">All Categories</a>
+                                <a href="{{ url('/admin/categories')}}">All Categories</a>
                             </li>
-
+{{-- 
                             <li>
-                                <a href="/categories/create">Create Category</a>
-                            </li>
+                                <a href="{{ url('/admin/categories/create')}}">Create Category</a>
+                            </li> --}}
 
                         </ul>
                         <!-- /.nav-second-level -->
@@ -184,11 +185,11 @@
                         <a href="#"><i class="fa fa-wrench fa-fw"></i>Media<span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li>
-                                <a href="/media">All Media</a>
+                                <a href="{{ url('/admin/media')}}">All Media</a>
                             </li>
 
                             <li>
-                                <a href="">Upload Media</a>
+                                <a href="{{ url('/admin/media/create')}}">Upload Media</a>
                             </li>
 
                         </ul>

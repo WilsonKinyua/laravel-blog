@@ -16,8 +16,8 @@
             <th>Body</th>
             <th>Created At</th>
             <th>Updated At</th>
-            {{-- <th>Edit User</th>
-            <th>Delete User</th> --}}
+            <th>Edit Post</th>
+            <th>Delete User</th>
         </tr>
     </thead>
     <tbody>
@@ -26,12 +26,22 @@
         <tr>
             <td>{{$post->id}}</td>
             <td>{{$post->user ? $post->user->name : "No User For this Post"}}</td>
-            <td>{{$post->category_id}}</td>
+            <td>{{$post->category ? $post->category->name : "No category"}}</td>
             <td><img height="100" width="200" src="{{$post->photo ? $post->photo->file : 'http://placehold.it/400x400' }} " alt=""></td>
             <td>{{$post->title}}</td>
             <td>{{$post->body}}</td>
             <td>{{$post->created_at->diffForHumans()}}</td>
             <td>{{$post->updated_at->diffForHumans()}}</td>
+            <td><a href="{{'/admin/posts/' . $post->id . "/edit"}}"><input type="button" class="btn btn-primary" value="Edit Post"></a></td>
+            <td>
+
+                {!! Form::open(['method'=>'DELETE', "action"=>['AdminPostsController@destroy',$post->id], 'files'=>true]) !!}
+                {!! Form::submit('Delete Post', ['class'=>'btn btn-danger']) !!}
+                {!! Form::close() !!}
+
+
+
+             </td>
         </tr>
         @endforeach
         @endif

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Category;
 use App\Http\Requests\PostsCreateRequest;
 use App\Photo;
 use App\Posts;
@@ -32,8 +33,8 @@ class AdminPostsController extends Controller
         //
 
 
-
-        return view("admin.posts.create" );
+        $category = Category::pluck("name","id")->all();
+        return view("admin.posts.create", compact("category"));
     }
 
     /**
@@ -84,7 +85,23 @@ class AdminPostsController extends Controller
         //
     }
 
-    /**
+    /**        $input = $request->all();
+
+        if($file = $request->file('photo_id')){
+
+            $name = time() . $file->getClientOriginalName();
+
+            $file->move('images', $name);
+
+            $photo = Photo::create(['file'=>$name]);
+
+            $input['photo_id'] = $photo->id;
+
+        }
+
+        Auth::user()->posts()->whereId($id)->first()->update($input);
+
+        return redirect("/admin/posts")->with("success" , "Post updated successfully");
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
@@ -93,8 +110,9 @@ class AdminPostsController extends Controller
     public function edit($id)
     {
         //
-
-        return view("admin.posts.edit");
+        $post = Posts::findOrFail($id);
+        $category = Category::pluck("name","id")->all();
+        return view("admin.posts.edit",compact("post" , 'category'));
     }
 
     /**
@@ -104,9 +122,26 @@ class AdminPostsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(PostsCreateRequest $request, $id)
     {
-        //
+      
+        $input = $request->all();
+
+        if($file = $request->file('photo_id')){
+
+            $name = time() . $file->getClientOriginalName();
+
+            $file->move('images', $name);
+
+            $photo = Photo::create(['file'=>$name]);
+
+            $input['photo_id'] = $photo->id;
+
+        }
+
+        Auth::user()->posts()->whereId($id)->first()->update($input);
+
+        return redirect("/admin/posts")->with("success" , "Post updated successfully");
     }
 
     /**
@@ -118,5 +153,14 @@ class AdminPostsController extends Controller
     public function destroy($id)
     {
         //
+
+        $post = Posts::findOrFail($id);
+
+        unlink(public_path() . $post->photo->file);
+        $post->delete();
+ 
+        return redirect("/admin/posts")->with('warning','Post Deleted successfully');
+
+
     }
 }
