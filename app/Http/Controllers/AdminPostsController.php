@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Category;
+use App\Comment;
 use App\Http\Requests\PostsCreateRequest;
 use App\Photo;
-use App\Posts;
+use App\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -19,7 +20,7 @@ class AdminPostsController extends Controller
     public function index()
     {
         //
-        $posts = Posts::all();
+        $posts = Post::all();
         return view("admin.posts.index", compact("posts"));
     }
 
@@ -110,7 +111,7 @@ class AdminPostsController extends Controller
     public function edit($id)
     {
         //
-        $post = Posts::findOrFail($id);
+        $post = Post::findOrFail($id);
         $category = Category::pluck("name","id")->all();
         return view("admin.posts.edit",compact("post" , 'category'));
     }
@@ -154,13 +155,19 @@ class AdminPostsController extends Controller
     {
         //
 
-        $post = Posts::findOrFail($id);
-
+        $post = Post::findOrFail($id);
         unlink(public_path() . $post->photo->file);
         $post->delete();
- 
         return redirect("/admin/posts")->with('warning','Post Deleted successfully');
 
+    }
 
+    public function post($id) {
+
+        $post       = Post::findOrFail($id);
+        $user       = Auth::user();
+        $categories = Category::all();
+        $comments   = $post->comments()->whereIsActive(1)->get();
+        return view("post", compact("post" ,"categories", "comments" , "user"));
     }
 }

@@ -28,7 +28,7 @@
             <td>{{$post->user ? $post->user->name : "No User For this Post"}}</td>
             <td>{{$post->category ? $post->category->name : "No category"}}</td>
             <td><img height="100" width="200" src="{{$post->photo ? $post->photo->file : 'http://placehold.it/400x400' }} " alt=""></td>
-            <td>{{$post->title}}</td>
+            <td><a href="{{ route('home.post',$post->id)}}">{{$post->title}}</a></td>
             <td>{{$post->body}}</td>
             <td>{{$post->created_at->diffForHumans()}}</td>
             <td>{{$post->updated_at->diffForHumans()}}</td>
@@ -39,9 +39,8 @@
                 {!! Form::submit('Delete Post', ['class'=>'btn btn-danger']) !!}
                 {!! Form::close() !!}
 
-
-
              </td>
+            <td><a href="{{ route('comment.post', $post->id)}}">View Comment</a></td>
         </tr>
         @endforeach
         @endif

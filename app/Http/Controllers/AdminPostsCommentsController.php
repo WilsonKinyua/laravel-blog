@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Comment;
+use App\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AdminPostsCommentsController extends Controller
 {
@@ -14,7 +17,8 @@ class AdminPostsCommentsController extends Controller
     public function index()
     {
         //
-        return view("admin.comments.index");
+        $comments = Comment::all();
+        return view("admin.comments.index" , compact("comments"));
     }
 
     /**
@@ -25,6 +29,8 @@ class AdminPostsCommentsController extends Controller
     public function create()
     {
         //
+
+        
     }
 
     /**
@@ -36,6 +42,19 @@ class AdminPostsCommentsController extends Controller
     public function store(Request $request)
     {
         //
+        $user = Auth::user();
+      
+
+        $data = [
+            'post_id'   =>$request->post_id,
+            'author'    =>$user->name,
+            'email'     =>$user->email,
+            'photo'     =>$user->photo->file,
+            'body'      =>$request->body
+        ];
+
+        Comment::create($data);
+        return redirect()->back()->with("success", "Comment created and awaiting Approval by the admin");
     }
 
     /**
@@ -47,6 +66,10 @@ class AdminPostsCommentsController extends Controller
     public function show($id)
     {
         //
+        // return view("admin.comments.show", ['post' => Posts::findOrFail($id)->comments]);
+        $post = Post::findOrFail($id);
+        $comments = $post->comments;
+        return view('admin.comments.show', compact('comments'));
     }
 
     /**
@@ -70,6 +93,9 @@ class AdminPostsCommentsController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $comment = Comment::findOrFail($id);
+        $comment->update($request->all());
+        return redirect()->back()->with("success" , "Comment Updated Successfully");
     }
 
     /**
@@ -81,5 +107,10 @@ class AdminPostsCommentsController extends Controller
     public function destroy($id)
     {
         //
+
+        $comment = Comment::findOrFail($id);
+        $comment->delete();
+
+        return redirect()->back()->with("warning" , "Comment Deleted Successfully");
     }
 }

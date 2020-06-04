@@ -18,20 +18,18 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get("admin", function(){
+Route::get('post/{id}', ['as'=> 'home.post', 'uses'=>'AdminPostsController@post']);
+Route::get('admin/comments/{$id}', ['as'=> 'comment.post', 'uses'=>'AdminPostsCommentsController@show']);
+// Route::get('admin/comments/replies/{$id}', ['as'=> 'comments.replies', 'uses'=>'AdminPostsCommentsRepliesController@show']);
 
-
-    return view("admin.index");
-
-});
 
 Route::group(['middleware' => ['adminauth']], function () {
-
+    
+    Route::get("admin", function(){ return view("admin.index");});
     Route::resource('admin/users', 'AdminUsersController');
     Route::resource('admin/posts', 'AdminPostsController');
     Route::resource('admin/categories', 'AdminCategoriesController');
@@ -39,4 +37,10 @@ Route::group(['middleware' => ['adminauth']], function () {
     Route::resource('admin/comments', 'AdminPostsCommentsController');
     Route::resource('admin/comment/replies', 'AdminPostsCommentsRepliesController');
     
+});
+
+Route::group(['middleware' => ['auth']], function () {
+
+    Route::post('comment/reply', "AdminPostsCommentsRepliesController@createReply");
+
 });

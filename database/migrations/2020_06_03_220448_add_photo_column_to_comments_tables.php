@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePhotosTable extends Migration
+class AddPhotoColumnToCommentsTables extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,9 @@ class CreatePhotosTable extends Migration
      */
     public function up()
     {
-        Schema::create('photos', function (Blueprint $table) {
-            $table->id();
-            $table->string("file");
-            $table->timestamps();
+        Schema::table('comments', function (Blueprint $table) {
+            //
+            $table->string("photo");
         });
     }
 
@@ -27,6 +26,9 @@ class CreatePhotosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('photos');
+        Schema::table('comments', function (Blueprint $table) {
+            //
+            $table->dropColumn("photo");
+        });
     }
 }

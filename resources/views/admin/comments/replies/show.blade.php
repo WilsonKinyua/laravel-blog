@@ -1,7 +1,6 @@
 @extends('layouts.admin')
 
 
-
 @section('content')
 
 
@@ -16,32 +15,30 @@
                 <th>Email</th>
                 <th>Body</th>
                 <th>View Post</th>
-                <th>View Replies</th>
                 <th>Status</th>
                 <th>Created At</th>
                 <th>Delete Comment</th>
             </tr>
         </thead>
-            @if (count($comments) > 0)
-            @foreach ($comments as $comment)
+            @if ($replies)
+          @foreach($replies as $reply)
             <tbody>
             <tr>
-                <td>{{$comment->id}}</td>
-                <td>{{$comment->author ? $comment->author : "No User For this comment"}}</td>
-                <td>{{$comment->email}}</td>
-                <td>{{$comment->body}}</td>
-                <td><a href="{{route('home.post',$comment->post_id)}}">View Post</a></td>
-                <td><a href="{{ '/admin/comment/replies/'. $comment->id}}">View Replies</td>
+                <td>{{$reply->id}}</td>
+                <td>{{$reply->author}}</td>
+                <td>{{$reply->email}}</td>
+                <td>{{$reply->body}}</td>
+                <td><a href="{{route('home.post',$reply->comment->post->id)}}">View Post</a></td>
                 <td>
-                    @if ($comment->is_active == 1)
-                    {!! Form::open(['method'=>'PATCH', 'action'=> ['AdminPostsCommentsController@update', $comment->id]]) !!}
+                    @if ($reply->is_active == 1)
+                    {!! Form::open(['method'=>'PATCH', 'action'=> ['AdminPostsCommentsRepliesController@update', $reply->id]]) !!}
                     <input type="hidden" name="is_active" value="0">
                     <div class="form-group">
                         {!! Form::submit('Un-approve', ['class'=>'btn btn-info']) !!}
                     </div>
                     {!! Form::close() !!}
                         @else
-                        {!! Form::open(['method'=>'PATCH', 'action'=> ['AdminPostsCommentsController@update', $comment->id]]) !!}
+                        {!! Form::open(['method'=>'PATCH', 'action'=> ['AdminPostsCommentsRepliesController@update', $reply->id]]) !!}
                         <input type="hidden" name="is_active" value="1">
                         <div class="form-group">
                             {!! Form::submit('Approve', ['class'=>'btn btn-success']) !!}
@@ -49,10 +46,10 @@
                         {!! Form::close() !!}
                     @endif
                 </td>
-                <td>{{$comment->created_at->diffForHumans()}}</td>
+                <td>{{$reply->created_at->diffForHumans()}}</td>
                 <td>
-                    {!! Form::open(['method'=>'DELETE', "action"=>['AdminPostsCommentsController@destroy',$comment->id], 'files'=>true]) !!}
-                    {!! Form::submit('Delete comment', ['class'=>'btn btn-danger']) !!}
+                    {!! Form::open(['method'=>'DELETE', 'action'=> ['AdminPostsCommentsRepliesController@destroy', $reply->id]]) !!}
+                    {!! Form::submit('Delete Reply', ['class'=>'btn btn-danger']) !!}
                     {!! Form::close() !!}
                  </td>
             </tr>

@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Comment;
+use App\CommentReply;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AdminPostsCommentsRepliesController extends Controller
 {
@@ -38,6 +41,25 @@ class AdminPostsCommentsRepliesController extends Controller
         //
     }
 
+    public function createReply(Request $request) {
+
+
+        $user = Auth::user();
+      
+
+        $data = [
+            'comment_id'    =>$request->comment_id,
+            'author'        =>$user->name,
+            'email'         =>$user->email,
+            'photo'         =>$user->photo->file,
+            'body'          =>$request->body
+        ];
+
+        CommentReply::create($data);
+        return redirect()->back()->with("success", "Comment Reply created and awaiting Approval by the admin");
+        
+    }
+
     /**
      * Display the specified resource.
      *
@@ -47,6 +69,10 @@ class AdminPostsCommentsRepliesController extends Controller
     public function show($id)
     {
         //
+        $comment = Comment::findOrFail($id);
+        $replies = $comment->replies;
+
+        return view('admin.comments.replies.show' , compact("replies"));
     }
 
     /**
@@ -70,6 +96,10 @@ class AdminPostsCommentsRepliesController extends Controller
     public function update(Request $request, $id)
     {
         //
+        CommentReply::findOrFail($id)->update($request->all());
+
+
+        return redirect()->back()->with("success" , "Comment Reply Updated Successfully");
     }
 
     /**
@@ -81,5 +111,8 @@ class AdminPostsCommentsRepliesController extends Controller
     public function destroy($id)
     {
         //
+        $reply = CommentReply::findOrFail($id);
+        $reply->delete();
+        return redirect()->back()->with("warning" , "Comment Deleted Successfully");
     }
 }

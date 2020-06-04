@@ -16,22 +16,20 @@
                 <th>Email</th>
                 <th>Body</th>
                 <th>View Post</th>
-                <th>View Replies</th>
                 <th>Status</th>
                 <th>Created At</th>
                 <th>Delete Comment</th>
             </tr>
         </thead>
-            @if (count($comments) > 0)
-            @foreach ($comments as $comment)
+            @if ($comments)
+          @foreach($comments as $comment)
             <tbody>
             <tr>
                 <td>{{$comment->id}}</td>
-                <td>{{$comment->author ? $comment->author : "No User For this comment"}}</td>
+                <td>{{$comment->author}}</td>
                 <td>{{$comment->email}}</td>
                 <td>{{$comment->body}}</td>
                 <td><a href="{{route('home.post',$comment->post_id)}}">View Post</a></td>
-                <td><a href="{{ '/admin/comment/replies/'. $comment->id}}">View Replies</td>
                 <td>
                     @if ($comment->is_active == 1)
                     {!! Form::open(['method'=>'PATCH', 'action'=> ['AdminPostsCommentsController@update', $comment->id]]) !!}
