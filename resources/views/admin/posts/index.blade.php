@@ -24,6 +24,7 @@
         @if ($posts)
         @foreach ($posts as $post)
         <tr>
+          
             <td>{{$post->id}}</td>
             <td>{{$post->user ? $post->user->name : "No User For this Post"}}</td>
             <td>{{$post->category ? $post->category->name : "No category"}}</td>
